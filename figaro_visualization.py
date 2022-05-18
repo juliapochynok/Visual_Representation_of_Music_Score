@@ -5,7 +5,8 @@ from polar_chart import get_visualization_polar_piano_roll
 from score_information import get_midi
 
 if __name__ == '__main__':
-    figaro_data = get_midi('Figaro/marriage_of_figaro_overture_ORCH.mid')
+    figaro_data = get_midi('Figaro/W.-A.-Mozart_The-Marriage-of-Figaro.mid')
+
     # visualize_bcd(figaro_data)
     # get_visualization_durations(figaro_data)
     get_visualization_polar_piano_roll(figaro_data)
