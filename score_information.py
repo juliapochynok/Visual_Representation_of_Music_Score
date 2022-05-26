@@ -66,8 +66,8 @@ def rgb_to_one(rgb):
 
 def get_colour_palette(score):
     keys = score.key_signature_changes
-    print(keys[0])
-    if keys[0].key_number <= 11:
+    # print(keys[0])
+    if len(keys) != 0 and keys[0].key_number <= 11:
         return WarmPalette
     else:
         return CoolPalette

@@ -41,7 +41,6 @@ def get_visualization_durations(score):
         if max(durations) > max_duration:
             max_duration = max(durations)
 
-    
     # ax.set_yticks([0.2, 0.6, 0.8], minor=False)
     # ynew = 0.3
     # ax.axhline(ynew)
@@ -54,7 +53,6 @@ def get_visualization_durations(score):
     for i in range(numerator + 1):
         ticks.append(beats[i])
     
-
     ax.set_xticks(ticks, minor=False)
     ax.xaxis.grid(True, which='major')
     plt.xlim(0, max_duration)
@@ -75,7 +73,7 @@ if __name__ == '__main__':
 
     symphony_40 = get_midi('Symphony_40/W.-A.-Mozart_Symphony-No-40.mid')
 
-    oi_u_luzi = get_midi('oi_u_luzi/oi2.mid')
+    # oi_u_luzi = get_midi('oi_u_luzi/oi2.mid')
 
-    get_visualization_durations(bach_andante)
+    get_visualization_durations(bach_andante[0])
     

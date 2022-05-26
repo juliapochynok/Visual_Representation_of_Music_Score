@@ -19,7 +19,7 @@ top = bottom + height
 
 # times: [times in seconds from smallest to biggest]
 # pitches: for instr [1,2,3,4]
-def get_visualization_polar_piano_roll(score, text_list):
+def get_visualization_polar_piano_roll(score, text_list, style_data):
 
     cm = 1/2.54  # centimeters in inches
     fig = plt.figure(figsize=(25*cm, 25*cm), linewidth=4)
@@ -75,13 +75,15 @@ def get_visualization_polar_piano_roll(score, text_list):
     ax.set_yticks([])
     ax.set_xticks([])
 
-    background_colour, edge_colour = add_background(palette, 2)
+    palette = get_colour_palette(score)
+    background_colour, edge_colour = add_background(palette,  style_data['colour'])
     fig.patch.set_facecolor(background_colour)
     
-    sel_font = get_text_font(4)
-    add_text(plt, ax, score, text_list, 3, edge_colour, sel_font)
+    sel_font = get_text_font( style_data['font'])
    
-    plt.savefig("pictures/1234567.png", bbox_inches = 'tight',pad_inches = 0, 
+    add_text(plt, ax, score, text_list,  style_data['placement'], edge_colour, sel_font)
+    plt.savefig("pictures/" + text_list[0] + text_list[1] + "polar.png", 
+    bbox_inches = 'tight',pad_inches = 0, 
      facecolor=fig.get_facecolor(), edgecolor=edge_colour)
     plt.show()
 
@@ -173,8 +175,8 @@ if __name__ == '__main__':
     bolero_data = get_midi('Bolero/Alfredo-Casella_Bolero.mid')
     figaro_data = get_midi('Figaro/W.-A.-Mozart_The-Marriage-of-Figaro.mid')
     
-    bach_air = get_midi('Air/Johann-Sebastian-Bach_Air.mid')
-    bach_fugue = get_midi('Tocatta_Fugue/J.-S.-Bach_Tocatta-and-Fugue-D-minor-BWV-565.mid')
+    bach_air = get_midi('Air/J.-S.-Bach_Air.mid')
+    bach_fugue = get_midi('Tocatta_Fugue/J.-S.-Bach_Tocatta-and-Fugue-Dmin.mid')
 
     bach_andante = get_midi('Prelude/J.-S.-Bach_Andante.mid')
 
@@ -186,5 +188,8 @@ if __name__ == '__main__':
 
     happy_birthday = get_midi('Happy_Birthday/Happy_Birthday.mid')
 
-    get_visualization_polar_piano_roll(vivaldi_summer[0], vivaldi_summer[1])
+    ddang = get_midi('Happy_Birthday/Stray-Kids_땡-(FREEZE).mid')
+
+    style_data = {'colour': 3, 'font': 2, 'placement':3}
+    get_visualization_polar_piano_roll(bach_andante[0], bach_andante[1], style_data)
     

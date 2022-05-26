@@ -1,25 +1,20 @@
-from cmath import pi
-from re import I
-from time import time
-from turtle import color
-from mido import MidiFile
-import pretty_midi
-
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 
-from colour_palettes import CoolPalette, WarmPalette
-from score_information import rgb_to_one, get_all_durations, get_colour_palette, note_sorting_function, get_colour_of_note, get_midi
+from score_information import rgb_to_one, get_all_durations, get_colour_palette, note_sorting_function, get_colour_of_note, get_midi, add_background, get_text_font
 
 from matplotlib.pyplot import *
 from numpy import *
-import math
-from matplotlib import patches
-from matplotlib.patches import Arc
+import matplotlib.patheffects as path_effects
 
-csfont = {'fontname':'Comic Sans MS'}
-hfont = {'fontname':'Helvetica'}
+
+# build a rectangle in axes coords
+left, width = .25, .5
+bottom, height = .25, .5
+right = left + width
+top = bottom + height
+
 
 # xpos - note number
 # ypos - time(first,second)
@@ -31,7 +26,7 @@ hfont = {'fontname':'Helvetica'}
 
 # z - volume, opacity - duration
 def visualize_bcd(score):
-    pitches, times, volumes, colours = get_all_score_data(score)
+    pitches, times, volumes, colours = get_all_score_data(score, True)
         
     dx = np.ones(len(pitches)) 
     dy = np.ones(len(pitches)) 
@@ -41,7 +36,7 @@ def visualize_bcd(score):
 
 # z - duration, opacity - volume
 def visualize_bcv(score):
-    pitches, times, volumes, colours = get_all_score_data2(score)
+    pitches, times, volumes, colours = get_all_score_data2(score, True)
         
     dx = np.ones(len(pitches)) 
     dy = np.ones(len(pitches)) 
@@ -50,65 +45,87 @@ def visualize_bcv(score):
     get_visualization_bar_chart_volume(pitches, times, zpos, dx, dy, volumes, colours, score)
 
 
-def visualize_bcd_2d(score, text_list):
-    # duration
-    pitches, times, volumes, colours = get_all_score_data(score)
-    # volume
-    # pitches, times, volumes, colours = get_all_score_data2(score)
-        
+def visualize_bcdv_2d(score, text_list, focus_string, style_data):
+    if focus_string == 'duration':
+        pitches, times, volumes, colours = get_all_score_data(score, True)
+    else:
+        pitches, times, volumes, colours = get_all_score_data2(score, True)
+
     dx = np.ones(len(pitches)) 
     dy = np.ones(len(pitches)) 
     zpos = [0 for x in range(len(pitches))]
-    get_visualization_bar_chart_duration_2d(pitches, times, zpos, dx, dy, volumes, colours, score, text_list)
+    get_visualization_bar_chart_duration_2d(pitches, times, zpos, dx, dy, volumes, colours, score, text_list, style_data, focus_string)
 
+def visualize_bcdav_2d(score, text_list, style_data):
+    pitches, times, volumes, colours = get_all_score_data(score, True)
+    pitches1, times1, volumes1, colours1 = get_all_score_data2(score, True)
+    
+    cm = 1/2.54  # centimeters in inches
+    fig, ax = plt.subplots(1,1, figsize=(25*cm, 25*cm), linewidth=4)
 
-def get_visualization_bar_chart_duration_2d(xpos, ypos, zpos, dx, dy, dz, colours, score, text_list):
+    plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, 
+            hspace = 0, wspace = 0)
+    plt.margins(0,0)
+    plt.gca().xaxis.set_major_locator(plt.NullLocator())
+    plt.gca().yaxis.set_major_locator(plt.NullLocator())
 
-    print("pitches")
-    print(xpos)
-    print("times")
-    print(ypos)
-    print("volumes")
-    print(dz)
-    print("colours")
-    print(colours)
-    all_durations = get_all_durations(score)
-    print("durations")
-    print(all_durations)
+    ax.scatter(pitches, times, color = colours, s = volumes, zorder=1)
 
-    plt.style.use('dark_background')
-    fig, ax = plt.subplots(1,1)
-    plt.scatter(xpos, ypos, color = colours, s = dz)
+    ax.scatter(pitches1, times1, color = colours1, s = volumes1, zorder=2)
 
     plt.xlim([0, 127])
+    plt.ylim([0, max(times) + 1])
     plt.axis('off')
-    add_text(plt, ax, score, text_list)
+    # add_text(plt, ax, score, text_list)
     # plt.savefig('pictures/2.png')
+
+    palette = get_colour_palette(score)
+    background_colour, edge_colour = add_background(palette, style_data['colour'])
+    fig.patch.set_facecolor(background_colour)
+    
+    sel_font = get_text_font(style_data['font'])
+
+    add_text(plt, ax, score, text_list, style_data['placement'], edge_colour, sel_font)
+    plt.savefig("pictures/" + text_list[0] + text_list[1] + "visualize_bcdav_2d.png", 
+    bbox_inches = 'tight', pad_inches = 0, 
+     facecolor=fig.get_facecolor(), edgecolor=edge_colour
+     )
+    plt.show()
+
+
+
+def get_visualization_bar_chart_duration_2d(xpos, ypos, zpos, dx, dy, dz, colours, score, text_list, style_data, focus_string):
+
+    cm = 1/2.54  # centimeters in inches
+    fig, ax = plt.subplots(1,1, figsize=(25*cm, 25*cm), linewidth=4)
+
+    plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, 
+            hspace = 0, wspace = 0)
+    plt.margins(0,0)
+    plt.gca().xaxis.set_major_locator(plt.NullLocator())
+    plt.gca().yaxis.set_major_locator(plt.NullLocator())
+
+
+    plt.scatter(xpos, ypos, color = colours, s = dz)
+    plt.xlim([0, 127])
+    plt.ylim([0, max(ypos) + 1])
+    plt.axis('off')
+    # add_text(plt, ax, score, text_list)
+    # plt.savefig('pictures/2.png')
+
+    palette = get_colour_palette(score)
+    background_colour, edge_colour = add_background(palette,  style_data['colour'])
+    fig.patch.set_facecolor(background_colour)
+    
+    sel_font = get_text_font( style_data['font'])
+
+    add_text(plt, ax, score, text_list,  style_data['placement'], edge_colour, sel_font)
+    plt.savefig("pictures/" + text_list[0] + text_list[1] + focus_string + "_get_visualization_bar_chart_duration_2d.png", 
+    bbox_inches = 'tight', pad_inches = 0, 
+     facecolor=fig.get_facecolor(), edgecolor=edge_colour
+     )
     plt.show()
     
-
-# def spiral(score):
-#     pitches, times, volumes, colours = get_all_score_data(score)
-#     # volume
-#     # pitches, times, volumes, colours = get_all_score_data2(score)
-        
-#     dx = np.ones(len(pitches)) 
-#     dy = np.ones(len(pitches)) 
-#     zpos = [0 for x in range(len(pitches))]
-
-#     # r = linspace(0,20,360)
-#     # t = linspace(0,2000,360)
-#     # for i in range(len(times)):
-#     #     x = pitches[i]*math.cos(math.radians(times[i]))
-#     #     y = pitches[i]*math.sin(math.radians(times[i]))
-
-#     r = linspace(0,20,360)
-#     t = linspace(0,2000,360)
-#     x = r*math.cos(math.radians(t))
-#     y = r*math.sin(math.radians(t))
-
-#     plot(x,y)
-#     plt.show()
 
 
 def get_visualization_bar_chart_duration(xpos, ypos, zpos, dx, dy, dz, colours):
@@ -141,7 +158,7 @@ def get_visualization_bar_chart_volume(xpos, ypos, zpos, dx, dy, dz, colours, sc
     ax.bar3d(xpos, ypos, zpos, dx, dy, dz, color=colours)
     plt.show()
 
-def get_all_score_data(score):
+def get_all_score_data(score, with_time):
     pitches = []
     times = []
     volumes = []
@@ -167,6 +184,7 @@ def get_all_score_data(score):
 
     for current_note in sorted_notes:
         pitches.append(current_note[0].pitch)
+        # volumes.append(current_note[0].velocity)
         volumes.append(current_note[0].velocity)
 
         full_colour = get_colour_of_note(instruments_dict, all_colours,
@@ -174,12 +192,15 @@ def get_all_score_data(score):
 
         colours.append(full_colour)
         amount = pitches.count(current_note[0].pitch)
-        times.append(amount + 1)
+        if with_time:
+            times.append(current_note[0].start)
+        else:
+            times.append(amount + 1)
 
     return pitches, times, volumes, colours
 
 
-def get_all_score_data2(score):
+def get_all_score_data2(score, with_time):
     pitches = []
     times = []
     durations = []
@@ -203,53 +224,141 @@ def get_all_score_data2(score):
     for current_note in sorted_notes:
         pitches.append(current_note[0].pitch)
         durations.append(current_note[0].duration)
+        durations.append(current_note[0].duration * 10)
 
         full_colour = get_colour_of_note(instruments_dict, all_colours,
         current_note[0].velocity, 127, current_note[1])
 
         colours.append(full_colour)
         amount = pitches.count(current_note[0].pitch)
-        times.append(amount + 1)
+        if with_time:
+            times.append(current_note[0].start)
+        else:
+            times.append(amount + 1)
 
     return pitches, times, durations, colours
 
 
-def add_text(curr_plt, ax, score, text_list):
+def add_text(curr_plt, ax, score, text_list, number, colour, sel_font):
+    if number == 1:
+        add_text1(curr_plt, ax, score, text_list, colour, sel_font)
+    elif number == 2:
+        add_text2(curr_plt, ax, score, text_list, colour, sel_font)
+    elif number == 3:
+        add_text3(curr_plt, ax, score, text_list, colour, sel_font)
+    else:
+        add_text4(curr_plt, ax, score, text_list, colour, sel_font)
+        
+
+def add_text1(curr_plt, ax, score, text_list, colour, sel_font):
     palette = get_colour_palette(score)
     all_colours = palette.all_colours()
 
-    curr_plt.text(0.05, 0.95, text_list[0],
+    curr_plt.text(0.07*(left+right), 0.95*(bottom+top), text_list[0],
         horizontalalignment='left',
         verticalalignment='top',
         transform=ax.transAxes,
-        color=[rgb_to_one(all_colours[-1][0]),rgb_to_one(all_colours[-1][1]), rgb_to_one(all_colours[-1][2])],
-        **csfont)
+        fontweight=900,
+        fontsize='xx-large',
+        color=colour,
+        **sel_font)
 
-    curr_plt.text(0.05, 0.90, text_list[1],
+    curr_plt.text(0.07*(left+right), 0.9*(bottom+top), text_list[1],
         horizontalalignment='left',
         verticalalignment='top',
         transform=ax.transAxes,
-        color=[rgb_to_one(all_colours[-1][0]),rgb_to_one(all_colours[-1][1]), rgb_to_one(all_colours[-1][2])],
-        **csfont)
+        fontweight=900,
+        fontsize='xx-large',
+        color=colour,
+        **sel_font)
+    return curr_plt
+
+def add_text2(curr_plt, ax, score, text_list, colour, sel_font):
+
+    text = curr_plt.text(0.5*(left+right), 0.517*(bottom+top), text_list[0] + " | " + text_list[1],
+        horizontalalignment='center',
+        verticalalignment='top',
+        fontweight=900,
+        fontsize='xx-large',
+        transform=ax.transAxes,
+        color = colour,
+        **sel_font)
+    text.set_path_effects([path_effects.Stroke(linewidth=5, foreground='black'),
+                       path_effects.Normal()])
+    return curr_plt
+
+
+def add_text3(curr_plt, ax, score, text_list, colour, sel_font):
+    palette = get_colour_palette(score)
+    all_colours = palette.all_colours()
+
+    curr_plt.text(0.07*(left+right), 0.93*(bottom+top), text_list[0],
+        horizontalalignment='left',
+        verticalalignment='top',
+        transform=ax.transAxes,
+        fontweight=900,
+        fontsize='xx-large',
+        color=colour,
+        **sel_font)
+
+    curr_plt.text((0.93-(len(text_list[1])/100))*(left+right), 0.93*(bottom+top), text_list[1],
+        horizontalalignment='left',
+        verticalalignment='top',
+        transform=ax.transAxes,
+        fontweight=900,
+        fontsize='xx-large',
+        color=colour,
+        **sel_font)
+    return curr_plt
+
+
+def add_text4(curr_plt, ax, score, text_list, colour, sel_font):
+    palette = get_colour_palette(score)
+    all_colours = palette.all_colours()
+
+    curr_plt.text(0.07*(left+right), 0.07*(bottom+top), text_list[0],
+        horizontalalignment='left',
+        verticalalignment='top',
+        transform=ax.transAxes,
+        fontweight=900,
+        fontsize='xx-large',
+        color=colour,
+        **sel_font)
+
+    curr_plt.text((0.93-(len(text_list[1])/100))*(left+right), 0.07*(bottom+top), text_list[1],
+        horizontalalignment='left',
+        verticalalignment='top',
+        transform=ax.transAxes,
+        fontweight=900,
+        fontsize='xx-large',
+        color=colour,
+        **sel_font)
     return curr_plt
 
 if __name__ == '__main__':
-    bolero_data = get_midi('Bolero/Alfredo-Casella_Bolero.mid')
-    figaro_data = get_midi('Figaro/W.-A.-Mozart_The-Marriage-of-Figaro.mid')
-    
-    bach_air = get_midi('Air/Johann-Sebastian-Bach_Air.mid')
+    bach_air = get_midi('Air/J.-S.-Bach_Air.mid')
+    bach_fugue = get_midi('Tocatta_Fugue/J.-S.-Bach_Tocatta-and-Fugue-Dmin.mid')
 
-    bach_fugue = get_midi('Tocatta_Fugue/J.-S.-Bach_Tocatta-and-Fugue-D-minor-BWV-565.mid')
-    bach_andante = get_midi('Prelude/J.-S.-Bach_Andante.mid')
+    # bach_andante = get_midi('Prelude/J.-S.-Bach_Andante.mid')
+
+
+    bolero_data = get_midi('Bolero/Alfredo-Casella_Bolero.mid')
+    
 
     vivaldi_summer = get_midi('Summer/Vivaldi_Summer.mid')
+    
 
+
+    figaro_data = get_midi('Figaro/W.-A.-Mozart_The-Marriage-of-Figaro.mid')
     symphony_40 = get_midi('Symphony_40/W.-A.-Mozart_Symphony-No-40.mid')
 
+
     oi_u_luzi = get_midi('oi_u_luzi/nation_oi2.mid')
-
     happy_birthday = get_midi('Happy_Birthday/Happy_Birthday.mid')
+    ddang = get_midi('Happy_Birthday/Stray-Kids_땡-(FREEZE).mid')
 
-    visualize_bcd_2d(happy_birthday[0], happy_birthday[1])
     # visualize_bcd(bolero_data[0])
-    # spiral(bolero_data)
+    style_data = {'colour': 1, 'font': 2, 'placement':3}
+    visualize_bcdv_2d(bach_air[0], bach_air[1], 'duration', style_data)
+    visualize_bcdv_2d(bach_fugue[0], bach_fugue[1], 'volume', style_data)
+    # visualize_bcdav_2d(bach_andante[0], bach_andante[1], style_data)
