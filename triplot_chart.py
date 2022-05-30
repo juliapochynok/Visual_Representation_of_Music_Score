@@ -14,11 +14,14 @@ from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 
 def get_visualization_arc_duration_triangle(score, text_list, with_time, style_data):
+    '''
+    This function creates Triangular chart visualization focusing on duration.
+    '''
     pitches, times, volumes, colours = get_all_score_data(score, with_time)
     palette = get_colour_palette(score)
 
-    cm = 1/2.54  # centimeters in inches
-    fig, ax = plt.subplots(1,1, figsize=(25*cm, 25*cm), linewidth=4)
+    cm = 1/2.54  
+    fig, ax = plt.subplots(1,1, figsize=(25*cm, 25*cm), linewidth=20)
     max_y_value = max(times) + 10
     ax.set_xlim(0, 127) 
     ax.set_ylim(-10, max_y_value)
@@ -36,9 +39,6 @@ def get_visualization_arc_duration_triangle(score, text_list, with_time, style_d
         point = [x1, y1]
         points.append(point)
         
-        # if i < length - 1:
-        #     triangles.append([i, i+1, i+2]) 
-        # triangles.append(0)
 
     plt.scatter(pitches, times, s = 7, color = colours[:])
 
@@ -54,7 +54,6 @@ def get_visualization_arc_duration_triangle(score, text_list, with_time, style_d
         start += 2
         end += 2
 
-    # plt.triplot(pitches, times, triangles, color='g', lw = 1)
     plt.axis('off')
 
     background_colour, edge_colour = add_background(palette,  style_data['colour'])
@@ -63,18 +62,24 @@ def get_visualization_arc_duration_triangle(score, text_list, with_time, style_d
     sel_font = get_text_font( style_data['font'])
 
     add_text(plt, ax, score, text_list,  style_data['placement'], edge_colour, sel_font)
-    plt.savefig("pictures/" + text_list[0] + text_list[1] + str(with_time) + "triplot_duration.png", 
+    plt.savefig("pictures/results/" + text_list[0] + text_list[1] + "/" + text_list[0] + text_list[1] + str(with_time) +
+    str( style_data['colour']) + str( style_data['font']) + str( style_data['placement']) 
+    + "triplot_duration.png", 
     bbox_inches = 'tight', pad_inches = 0, 
      facecolor=fig.get_facecolor(), edgecolor=edge_colour
      )
     plt.show()
 
+
 def get_visualization_arc_volume_triangle(score, text_list, with_time, style_data):
+    '''
+    This function creates Triangular chart visualization focusing on volume.
+    '''
     pitches, times, volumes, colours = get_all_score_data2(score, with_time)
     palette = get_colour_palette(score)
 
-    cm = 1/2.54  # centimeters in inches
-    fig, ax = plt.subplots(1,1, figsize=(25*cm, 25*cm), linewidth=4)
+    cm = 1/2.54 
+    fig, ax = plt.subplots(1,1, figsize=(25*cm, 25*cm), linewidth=20)
     max_y_value = max(times) + 10
     ax.set_xlim(0, 127) 
     ax.set_ylim(-10, max_y_value)
@@ -92,9 +97,6 @@ def get_visualization_arc_volume_triangle(score, text_list, with_time, style_dat
         point = [x1, y1]
         points.append(point)
         
-        # if i < length - 1:
-        #     triangles.append([i, i+1, i+2]) 
-        # triangles.append(0)
 
     plt.scatter(pitches, times, s = 7, color = colours[:])
 
@@ -110,7 +112,6 @@ def get_visualization_arc_volume_triangle(score, text_list, with_time, style_dat
         start += 3
         end += 3
 
-    # plt.triplot(pitches, times, triangles, color='g', lw = 1)
     plt.axis('off')
 
     background_colour, edge_colour = add_background(palette,  style_data['colour'])
@@ -119,7 +120,9 @@ def get_visualization_arc_volume_triangle(score, text_list, with_time, style_dat
     sel_font = get_text_font( style_data['font'])
 
     add_text(plt, ax, score, text_list,  style_data['placement'], edge_colour, sel_font)
-    plt.savefig("pictures/" + text_list[0] + text_list[1] + str(with_time) + "triplot_volume.png", 
+    plt.savefig("pictures/results/" + text_list[0] + text_list[1] + "/" + text_list[0] + text_list[1] + str(with_time) + 
+    str( style_data['colour']) + str( style_data['font']) + str( style_data['placement']) 
+    + "triplot_volume.png", 
     bbox_inches = 'tight', pad_inches = 0, 
      facecolor=fig.get_facecolor(), edgecolor=edge_colour
      )
@@ -132,7 +135,7 @@ if __name__ == '__main__':
     figaro_data = get_midi('Figaro/W.-A.-Mozart_The-Marriage-of-Figaro.mid')
     
     bach_air = get_midi('Air/J.-S.-Bach_Air.mid')
-    bach_fugue = get_midi('Tocatta_Fugue/J.-S.-Bach_Tocatta-and-Fugue-Dmin.mid')
+    bach_fugue = get_midi('Tocatta_Fugue/J.-S.-Bach_Tocatta-and-Fugue-D-minor.mid')
 
     bach_andante = get_midi('Prelude/J.-S.-Bach_Andante.mid')
 
@@ -146,6 +149,7 @@ if __name__ == '__main__':
     test = get_midi('Happy_Birthday/2_2.mid')
     ddang = get_midi('Happy_Birthday/Stray-Kids_땡-(FREEZE).mid')
 
-    style_data = {'colour': 2, 'font': 2, 'placement':4}
-    get_visualization_arc_duration_triangle(symphony_40[0], symphony_40[1], False, style_data)
-    get_visualization_arc_volume_triangle(symphony_40[0], symphony_40[1], False, style_data)
+    # style_data = {'colour': 5, 'font': 1, 'placement':4}
+    # get_visualization_arc_duration_triangle(bolero_data[0], bolero_data[1], False, style_data)
+    style_data = {'colour': 2, 'font': 3, 'placement':4}
+    get_visualization_arc_volume_triangle(figaro_data[0], figaro_data[1], True, style_data)

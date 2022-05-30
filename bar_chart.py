@@ -15,17 +15,11 @@ bottom, height = .25, .5
 right = left + width
 top = bottom + height
 
-
-# xpos - note number
-# ypos - time(first,second)
-# zpos - [0,0,0,0,0]
-# dx, dy - [1,1,1,1,1]
-# dz - note volume
-# colours - [1, 0, 0, alpha]
-# alpha - note duration
-
 # z - volume, opacity - duration
 def visualize_bcd(score):
+    '''
+    This function creates Bar chart visualization focusing on duration.
+    '''
     pitches, times, volumes, colours = get_all_score_data(score, True)
         
     dx = np.ones(len(pitches)) 
@@ -36,6 +30,9 @@ def visualize_bcd(score):
 
 # z - duration, opacity - volume
 def visualize_bcv(score):
+    '''
+    This function creates Bar chart visualization focusing on volume.
+    '''
     pitches, times, volumes, colours = get_all_score_data2(score, True)
         
     dx = np.ones(len(pitches)) 
@@ -45,11 +42,14 @@ def visualize_bcv(score):
     get_visualization_bar_chart_volume(pitches, times, zpos, dx, dy, volumes, colours, score)
 
 
-def visualize_bcdv_2d(score, text_list, focus_string, style_data):
+def visualize_bcdv_2d(score, text_list, focus_string, style_data, temporality):
+    '''
+    This function creates Bar chart visualization focusing on duration or volume.
+    '''
     if focus_string == 'duration':
-        pitches, times, volumes, colours = get_all_score_data(score, True)
+        pitches, times, volumes, colours = get_all_score_data(score, temporality)
     else:
-        pitches, times, volumes, colours = get_all_score_data2(score, True)
+        pitches, times, volumes, colours = get_all_score_data2(score, temporality)
 
     dx = np.ones(len(pitches)) 
     dy = np.ones(len(pitches)) 
@@ -57,11 +57,15 @@ def visualize_bcdv_2d(score, text_list, focus_string, style_data):
     get_visualization_bar_chart_duration_2d(pitches, times, zpos, dx, dy, volumes, colours, score, text_list, style_data, focus_string)
 
 def visualize_bcdav_2d(score, text_list, style_data):
+    '''
+    This function creates Bar chart visualization focusing
+    on both duration or volume.
+    '''
     pitches, times, volumes, colours = get_all_score_data(score, True)
     pitches1, times1, volumes1, colours1 = get_all_score_data2(score, True)
     
-    cm = 1/2.54  # centimeters in inches
-    fig, ax = plt.subplots(1,1, figsize=(25*cm, 25*cm), linewidth=4)
+    cm = 1/2.54 
+    fig, ax = plt.subplots(1,1, figsize=(25*cm, 25*cm), linewidth=20)
 
     plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, 
             hspace = 0, wspace = 0)
@@ -74,10 +78,8 @@ def visualize_bcdav_2d(score, text_list, style_data):
     ax.scatter(pitches1, times1, color = colours1, s = volumes1, zorder=2)
 
     plt.xlim([0, 127])
-    plt.ylim([0, max(times) + 1])
+    plt.ylim([-10, max(times) + 10])
     plt.axis('off')
-    # add_text(plt, ax, score, text_list)
-    # plt.savefig('pictures/2.png')
 
     palette = get_colour_palette(score)
     background_colour, edge_colour = add_background(palette, style_data['colour'])
@@ -86,7 +88,9 @@ def visualize_bcdav_2d(score, text_list, style_data):
     sel_font = get_text_font(style_data['font'])
 
     add_text(plt, ax, score, text_list, style_data['placement'], edge_colour, sel_font)
-    plt.savefig("pictures/" + text_list[0] + text_list[1] + "visualize_bcdav_2d.png", 
+    plt.savefig("pictures/results/" + text_list[0] + text_list[1] +  "/" + text_list[0] + text_list[1] +
+    str( style_data['colour']) + str( style_data['font']) + str( style_data['placement']) 
+     + "visualize_bcdav_2d.png", 
     bbox_inches = 'tight', pad_inches = 0, 
      facecolor=fig.get_facecolor(), edgecolor=edge_colour
      )
@@ -95,9 +99,12 @@ def visualize_bcdav_2d(score, text_list, style_data):
 
 
 def get_visualization_bar_chart_duration_2d(xpos, ypos, zpos, dx, dy, dz, colours, score, text_list, style_data, focus_string):
-
-    cm = 1/2.54  # centimeters in inches
-    fig, ax = plt.subplots(1,1, figsize=(25*cm, 25*cm), linewidth=4)
+    '''
+    This function gets input data about score and plots
+    Bar chart visualization focusing on duration in 2D.
+    '''
+    cm = 1/2.54 
+    fig, ax = plt.subplots(1,1, figsize=(25*cm, 25*cm), linewidth=20)
 
     plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, 
             hspace = 0, wspace = 0)
@@ -108,10 +115,8 @@ def get_visualization_bar_chart_duration_2d(xpos, ypos, zpos, dx, dy, dz, colour
 
     plt.scatter(xpos, ypos, color = colours, s = dz)
     plt.xlim([0, 127])
-    plt.ylim([0, max(ypos) + 1])
+    plt.ylim([-5, max(ypos) + 10])
     plt.axis('off')
-    # add_text(plt, ax, score, text_list)
-    # plt.savefig('pictures/2.png')
 
     palette = get_colour_palette(score)
     background_colour, edge_colour = add_background(palette,  style_data['colour'])
@@ -120,7 +125,9 @@ def get_visualization_bar_chart_duration_2d(xpos, ypos, zpos, dx, dy, dz, colour
     sel_font = get_text_font( style_data['font'])
 
     add_text(plt, ax, score, text_list,  style_data['placement'], edge_colour, sel_font)
-    plt.savefig("pictures/" + text_list[0] + text_list[1] + focus_string + "_get_visualization_bar_chart_duration_2d.png", 
+    plt.savefig("pictures/results/" + text_list[0] + text_list[1] +  "/" + text_list[0] + text_list[1] + focus_string + 
+    str( style_data['colour']) + str( style_data['font']) + str( style_data['placement']) 
+    + "_get_visualization_bar_chart_duration_2d.png", 
     bbox_inches = 'tight', pad_inches = 0, 
      facecolor=fig.get_facecolor(), edgecolor=edge_colour
      )
@@ -129,6 +136,10 @@ def get_visualization_bar_chart_duration_2d(xpos, ypos, zpos, dx, dy, dz, colour
 
 
 def get_visualization_bar_chart_duration(xpos, ypos, zpos, dx, dy, dz, colours):
+    '''
+    This function gets input data about score and plots
+    Bar chart visualization focusing on duration in 3D.
+    '''
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -142,10 +153,13 @@ def get_visualization_bar_chart_duration(xpos, ypos, zpos, dx, dy, dz, colours):
     ax.dist = 5
     ax.elev = 84
     ax.bar3d(xpos, ypos, zpos, dx, dy, dz, color=colours)
-    # plt.savefig('pictures/symphony_40_1.png')
     plt.show()
     
 def get_visualization_bar_chart_volume(xpos, ypos, zpos, dx, dy, dz, colours, score):
+    '''
+    This function gets input data about score and plots
+    Bar chart visualization focusing on volume in 3D.
+    '''
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -159,6 +173,10 @@ def get_visualization_bar_chart_volume(xpos, ypos, zpos, dx, dy, dz, colours, sc
     plt.show()
 
 def get_all_score_data(score, with_time):
+    '''
+    This function collects and processes data about score
+    and returns lists of pitches, times, volumes and colours
+    '''
     pitches = []
     times = []
     volumes = []
@@ -184,7 +202,6 @@ def get_all_score_data(score, with_time):
 
     for current_note in sorted_notes:
         pitches.append(current_note[0].pitch)
-        # volumes.append(current_note[0].velocity)
         volumes.append(current_note[0].velocity)
 
         full_colour = get_colour_of_note(instruments_dict, all_colours,
@@ -201,6 +218,10 @@ def get_all_score_data(score, with_time):
 
 
 def get_all_score_data2(score, with_time):
+    '''
+    This function collects and processes data about score
+    and returns lists of pitches, times, volumes and colours
+    '''
     pitches = []
     times = []
     durations = []
@@ -240,6 +261,9 @@ def get_all_score_data2(score, with_time):
 
 
 def add_text(curr_plt, ax, score, text_list, number, colour, sel_font):
+    '''
+    This function adds title in one of the placements 
+    '''
     if number == 1:
         add_text1(curr_plt, ax, score, text_list, colour, sel_font)
     elif number == 2:
@@ -251,6 +275,9 @@ def add_text(curr_plt, ax, score, text_list, number, colour, sel_font):
         
 
 def add_text1(curr_plt, ax, score, text_list, colour, sel_font):
+    '''
+    This function adds title in first possible placement 
+    '''
     palette = get_colour_palette(score)
     all_colours = palette.all_colours()
 
@@ -274,7 +301,9 @@ def add_text1(curr_plt, ax, score, text_list, colour, sel_font):
     return curr_plt
 
 def add_text2(curr_plt, ax, score, text_list, colour, sel_font):
-
+    '''
+    This function adds title in second possible placement 
+    '''
     text = curr_plt.text(0.5*(left+right), 0.517*(bottom+top), text_list[0] + " | " + text_list[1],
         horizontalalignment='center',
         verticalalignment='top',
@@ -289,6 +318,9 @@ def add_text2(curr_plt, ax, score, text_list, colour, sel_font):
 
 
 def add_text3(curr_plt, ax, score, text_list, colour, sel_font):
+    '''
+    This function adds title in third possible placement 
+    '''
     palette = get_colour_palette(score)
     all_colours = palette.all_colours()
 
@@ -313,6 +345,9 @@ def add_text3(curr_plt, ax, score, text_list, colour, sel_font):
 
 
 def add_text4(curr_plt, ax, score, text_list, colour, sel_font):
+    '''
+    This function adds title in fourth possible placement 
+    '''
     palette = get_colour_palette(score)
     all_colours = palette.all_colours()
 
@@ -337,28 +372,17 @@ def add_text4(curr_plt, ax, score, text_list, colour, sel_font):
 
 if __name__ == '__main__':
     bach_air = get_midi('Air/J.-S.-Bach_Air.mid')
-    bach_fugue = get_midi('Tocatta_Fugue/J.-S.-Bach_Tocatta-and-Fugue-Dmin.mid')
-
-    # bach_andante = get_midi('Prelude/J.-S.-Bach_Andante.mid')
-
+    bach_fugue = get_midi('Tocatta_Fugue/J.-S.-Bach_Tocatta-and-Fugue-D-minor.mid')
 
     bolero_data = get_midi('Bolero/Alfredo-Casella_Bolero.mid')
-    
-
     vivaldi_summer = get_midi('Summer/Vivaldi_Summer.mid')
-    
-
 
     figaro_data = get_midi('Figaro/W.-A.-Mozart_The-Marriage-of-Figaro.mid')
     symphony_40 = get_midi('Symphony_40/W.-A.-Mozart_Symphony-No-40.mid')
-
 
     oi_u_luzi = get_midi('oi_u_luzi/nation_oi2.mid')
     happy_birthday = get_midi('Happy_Birthday/Happy_Birthday.mid')
     ddang = get_midi('Happy_Birthday/Stray-Kids_땡-(FREEZE).mid')
 
-    # visualize_bcd(bolero_data[0])
-    style_data = {'colour': 1, 'font': 2, 'placement':3}
-    visualize_bcdv_2d(bach_air[0], bach_air[1], 'duration', style_data)
-    visualize_bcdv_2d(bach_fugue[0], bach_fugue[1], 'volume', style_data)
-    # visualize_bcdav_2d(bach_andante[0], bach_andante[1], style_data)
+    style_data = {'colour': 2, 'font': 3, 'placement':4}
+    visualize_bcdav_2d(figaro_data[0], figaro_data[1], style_data)

@@ -9,7 +9,9 @@ from score_information import get_colour_palette, get_midi
 
 
 def get_visualization_durations(score):
-
+    '''
+    This function creates line chart visualization focusing on duration.
+    '''
     fig, ax = plt.subplots()
     
     durations_amount = {}
@@ -34,16 +36,11 @@ def get_visualization_durations(score):
         
         durations = list(sorted_durations_amount.keys())
         amounts = list(sorted_durations_amount.values())
-        # plt.plot(durations, amounts, color=current_colour_rgb, marker='o')
         plt.plot(durations, amounts, color=current_colour_rgb)
         plt.fill_between(durations, amounts, color=current_colour_rgb, alpha=.3)
         index += 1
         if max(durations) > max_duration:
             max_duration = max(durations)
-
-    # ax.set_yticks([0.2, 0.6, 0.8], minor=False)
-    # ynew = 0.3
-    # ax.axhline(ynew)
 
     beats = score.get_beats()
     time_signatures = score.time_signature_changes

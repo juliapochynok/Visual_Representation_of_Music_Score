@@ -17,12 +17,13 @@ bottom, height = .25, .5
 right = left + width
 top = bottom + height
 
-# times: [times in seconds from smallest to biggest]
-# pitches: for instr [1,2,3,4]
-def get_visualization_polar_piano_roll(score, text_list, style_data):
 
-    cm = 1/2.54  # centimeters in inches
-    fig = plt.figure(figsize=(25*cm, 25*cm), linewidth=4)
+def get_visualization_polar_piano_roll(score, text_list, style_data):
+    '''
+    This function creates Polar chart visualization.
+    '''
+    cm = 1/2.54 
+    fig = plt.figure(figsize=(25*cm, 25*cm), linewidth=20)
 
     ax = fig.add_subplot(111, polar=True)
     ax.set_theta_direction(-1)
@@ -82,13 +83,18 @@ def get_visualization_polar_piano_roll(score, text_list, style_data):
     sel_font = get_text_font( style_data['font'])
    
     add_text(plt, ax, score, text_list,  style_data['placement'], edge_colour, sel_font)
-    plt.savefig("pictures/" + text_list[0] + text_list[1] + "polar.png", 
+    plt.savefig("pictures/results/" + text_list[0] + text_list[1] +  "/" + text_list[0] + text_list[1] +
+    str( style_data['colour']) + str( style_data['font']) + str( style_data['placement']) 
+    + "polar.png", 
     bbox_inches = 'tight',pad_inches = 0, 
      facecolor=fig.get_facecolor(), edgecolor=edge_colour)
     plt.show()
 
 
 def add_text(curr_plt, ax, score, text_list, number, colour, sel_font):
+    '''
+    This function adds title in one of the placements 
+    '''
     if number == 1:
         ax.set_thetamin(1)
         ax.set_thetamax(359)
@@ -106,7 +112,9 @@ def add_text(curr_plt, ax, score, text_list, number, colour, sel_font):
 
 
 def add_text1(curr_plt, ax, score, text_list, colour, sel_font):
-
+    '''
+    This function adds title in first possible placement 
+    '''
     text = curr_plt.text(0.5*(left+right), 0.517*(bottom+top), text_list[0] + " | " + text_list[1],
         horizontalalignment='center',
         verticalalignment='top',
@@ -121,6 +129,9 @@ def add_text1(curr_plt, ax, score, text_list, colour, sel_font):
 
 
 def add_text2(curr_plt, ax, score, text_list, colour, sel_font):
+    '''
+    This function adds title in second possible placement 
+    '''
     if len(text_list[0]) + len(text_list[1]) > 27:
         ax.set_rorigin(-40)
     elif len(text_list[0]) + len(text_list[1]) > 20:
@@ -141,7 +152,9 @@ def add_text2(curr_plt, ax, score, text_list, colour, sel_font):
 
 
 def add_text3(curr_plt, ax, score, text_list, colour, sel_font):
-
+    '''
+    This function adds title in third possible placement 
+    '''
     if len(text_list[0]) + len(text_list[1]) < 24:
         text = curr_plt.text(0.3 * (left + right), 0.510*(bottom+top), text_list[0] + " | " + text_list[1],
             horizontalalignment='center',
@@ -176,7 +189,7 @@ if __name__ == '__main__':
     figaro_data = get_midi('Figaro/W.-A.-Mozart_The-Marriage-of-Figaro.mid')
     
     bach_air = get_midi('Air/J.-S.-Bach_Air.mid')
-    bach_fugue = get_midi('Tocatta_Fugue/J.-S.-Bach_Tocatta-and-Fugue-Dmin.mid')
+    bach_fugue = get_midi('Tocatta_Fugue/J.-S.-Bach_Tocatta-and-Fugue-D-minor.mid')
 
     bach_andante = get_midi('Prelude/J.-S.-Bach_Andante.mid')
 
@@ -190,6 +203,5 @@ if __name__ == '__main__':
 
     ddang = get_midi('Happy_Birthday/Stray-Kids_땡-(FREEZE).mid')
 
-    style_data = {'colour': 3, 'font': 2, 'placement':3}
-    get_visualization_polar_piano_roll(bach_andante[0], bach_andante[1], style_data)
-    
+    style_data = {'colour': 4, 'font': 2, 'placement':1}
+    get_visualization_polar_piano_roll(symphony_40[0], symphony_40[1], style_data)

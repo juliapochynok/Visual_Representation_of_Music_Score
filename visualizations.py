@@ -8,6 +8,9 @@ from colour_palettes import CoolPalette, WarmPalette
 from math import pi
 
 def colour_visualization(palette):
+    '''
+    This function creates visualization of colour palette.
+    '''
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     x = [1,2,3,4,5,6,7,8,9,10,11,12]

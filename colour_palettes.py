@@ -2,6 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class WarmPalette:
+    '''
+    This class represents warm colour palette
+    '''
     yellow_green = [115, 154, 1]
     bitter_lemon = [161, 183, 82]
     yellow_ryb = [255, 255, 0]
@@ -16,7 +19,10 @@ class WarmPalette:
     cerise = [255, 200, 200]
 
     def all_colours():
-        return [WarmPalette.cyber_yellow,
+      '''
+      This function returns list of all warm colours
+      '''
+      return [WarmPalette.cyber_yellow,
          WarmPalette.yellow_ryb,
          WarmPalette.orange_peel, 
          WarmPalette.yellow_green,
@@ -34,6 +40,9 @@ class WarmPalette:
 
 
 class CoolPalette:
+    '''
+    This class represents cool colour palette
+    '''
     tyrian_purple = [170, 2, 115]
     palatinate_purple = [130, 2, 138]
     strong_violet = [86, 2, 152]
@@ -48,7 +57,10 @@ class CoolPalette:
     loncoln_green_second = [151, 244, 229]
 
     def all_colours():
-        return [CoolPalette.tyrian_purple,
+      '''
+      This function returns list of all cool colours
+      '''
+      return [CoolPalette.tyrian_purple,
          CoolPalette.midnight_blue,
         CoolPalette.prussian_blue,
          CoolPalette.hunter_green, 
