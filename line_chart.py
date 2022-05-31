@@ -58,19 +58,16 @@ def get_visualization_durations(score):
 
 
 if __name__ == '__main__':
-    bolero_data = get_midi('Bolero/Alfredo-Casella_Bolero.mid')
-    figaro_data = get_midi('Figaro/W.-A.-Mozart_The-Marriage-of-Figaro.mid')
-    
-    bach_air = get_midi('Air/Johann-Sebastian-Bach_Air.mid')
+    bach_air = get_midi('Air/J.-S.-Bach_Air.mid')
+    bach_fugue = get_midi('Tocatta_Fugue/J.-S.-Bach_Tocatta-and-Fugue-D-minor.mid')
 
-    bach_fugue = get_midi('Tocatta_Fugue/J.-S.-Bach_Tocatta-and-Fugue-D-minor-BWV-565.mid')
     bach_andante = get_midi('Prelude/J.-S.-Bach_Andante.mid')
-
+    
+    bolero_data = get_midi('Bolero/Alfredo-Casella_Bolero.mid')
     vivaldi_summer = get_midi('Summer/Vivaldi_Summer.mid')
 
+    figaro_data = get_midi('Figaro/W.-A.-Mozart_The-Marriage-of-Figaro.mid')
     symphony_40 = get_midi('Symphony_40/W.-A.-Mozart_Symphony-No-40.mid')
-
-    # oi_u_luzi = get_midi('oi_u_luzi/oi2.mid')
 
     get_visualization_durations(bach_andante[0])
     

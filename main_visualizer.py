@@ -25,7 +25,6 @@ def visualize_all():
         for colour_ind in range(6):
             for font_ind in range(1, 5):
                 for place_ind in range(1, 4):
-                    # place_ind = 4
                     # 1,2,3
                     if (place_ind != 4):
                         style_data = {'colour': colour_ind, 'font': font_ind, 'placement':place_ind}

@@ -62,7 +62,9 @@ def get_visualization_arc_duration_triangle(score, text_list, with_time, style_d
     sel_font = get_text_font( style_data['font'])
 
     add_text(plt, ax, score, text_list,  style_data['placement'], edge_colour, sel_font)
-    plt.savefig("pictures/results/" + text_list[0] + text_list[1] + "/" + text_list[0] + text_list[1] + str(with_time) +
+    plt.savefig("pictures/results/"
+    #  + text_list[0] + text_list[1] + "/"   //uncomment if seperate fonder for score exists
+     + text_list[0] + text_list[1] + str(with_time) +
     str( style_data['colour']) + str( style_data['font']) + str( style_data['placement']) 
     + "triplot_duration.png", 
     bbox_inches = 'tight', pad_inches = 0, 
@@ -120,7 +122,9 @@ def get_visualization_arc_volume_triangle(score, text_list, with_time, style_dat
     sel_font = get_text_font( style_data['font'])
 
     add_text(plt, ax, score, text_list,  style_data['placement'], edge_colour, sel_font)
-    plt.savefig("pictures/results/" + text_list[0] + text_list[1] + "/" + text_list[0] + text_list[1] + str(with_time) + 
+    plt.savefig("pictures/results/" 
+    # + text_list[0] + text_list[1] + "/"   //uncomment if seperate fonder for score exists
+    + text_list[0] + text_list[1] + str(with_time) + 
     str( style_data['colour']) + str( style_data['font']) + str( style_data['placement']) 
     + "triplot_volume.png", 
     bbox_inches = 'tight', pad_inches = 0, 
@@ -131,25 +135,16 @@ def get_visualization_arc_volume_triangle(score, text_list, with_time, style_dat
 
 
 if __name__ == '__main__':
-    bolero_data = get_midi('Bolero/Alfredo-Casella_Bolero.mid')
-    figaro_data = get_midi('Figaro/W.-A.-Mozart_The-Marriage-of-Figaro.mid')
-    
     bach_air = get_midi('Air/J.-S.-Bach_Air.mid')
     bach_fugue = get_midi('Tocatta_Fugue/J.-S.-Bach_Tocatta-and-Fugue-D-minor.mid')
 
     bach_andante = get_midi('Prelude/J.-S.-Bach_Andante.mid')
-
+    
+    bolero_data = get_midi('Bolero/Alfredo-Casella_Bolero.mid')
     vivaldi_summer = get_midi('Summer/Vivaldi_Summer.mid')
 
+    figaro_data = get_midi('Figaro/W.-A.-Mozart_The-Marriage-of-Figaro.mid')
     symphony_40 = get_midi('Symphony_40/W.-A.-Mozart_Symphony-No-40.mid')
 
-    oi_u_luzi = get_midi('oi_u_luzi/nation_oi2.mid')
-
-    happy_birthday = get_midi('Happy_Birthday/Happy_Birthday.mid')
-    test = get_midi('Happy_Birthday/2_2.mid')
-    ddang = get_midi('Happy_Birthday/Stray-Kids_땡-(FREEZE).mid')
-
-    # style_data = {'colour': 5, 'font': 1, 'placement':4}
-    # get_visualization_arc_duration_triangle(bolero_data[0], bolero_data[1], False, style_data)
     style_data = {'colour': 2, 'font': 3, 'placement':4}
     get_visualization_arc_volume_triangle(figaro_data[0], figaro_data[1], True, style_data)

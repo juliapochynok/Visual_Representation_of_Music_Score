@@ -129,7 +129,6 @@ warm_colour_edges = [
 
 cool_colours_back = [
     [rgb_to_one(127), rgb_to_one(99), rgb_to_one(110)],
-    # [rgb_to_one(85), rgb_to_one(134), rgb_to_one(140)],
     [rgb_to_one(132), rgb_to_one(165), rgb_to_one(157)],
     [rgb_to_one(70), rgb_to_one(32), rgb_to_one(50)],
     [rgb_to_one(64), rgb_to_one(145), rgb_to_one(108)],
@@ -139,8 +138,6 @@ cool_colours_back = [
 
 cool_colour_edges = [
     [rgb_to_one(245), rgb_to_one(202), rgb_to_one(195)],
-    # [rgb_to_one(171), rgb_to_one(245), rgb_to_one(236)],
-
     [rgb_to_one(171), rgb_to_one(245), rgb_to_one(236)],
     [rgb_to_one(252), rgb_to_one(177), rgb_to_one(166)],
     [rgb_to_one(183), rgb_to_one(228), rgb_to_one(199)],
